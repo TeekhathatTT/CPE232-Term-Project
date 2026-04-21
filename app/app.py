@@ -20,6 +20,14 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
+            body {
+    background-color: #0e1117;
+    color: #f0eeff;
+}
+
+.stApp {
+    background-color: #0e1117;
+}
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
 #MainMenu, footer, header { visibility: hidden; }
