@@ -166,10 +166,7 @@ BEHAVIORS = [
 # Load models  (cached)
 # ─────────────────────────────────────────────
 @st.cache_resource
-def load_models():
-    targets = ["AGR5","AGR9","CSN6","EST7","EXT4","OPN3","OPN10"]
-
-    # map file id
+def get_model(col):
     FILE_IDS = {
         "AGR5": "12PMvfPLH_yknObS_HQtBlYKDm5fAy6MH",
         "AGR9": "157oXBN-bF6DVLodI4ARFavXXt1odNZED",
@@ -180,27 +177,15 @@ def load_models():
         "OPN10": "1VdyM_u_8aXNhKtCGiYWxjEApvEI8sSMk",
     }
 
-    model_dir = "models"
-    os.makedirs(model_dir, exist_ok=True)
+    os.makedirs("models", exist_ok=True)
+    path = f"models/xgb_{col}.pkl"
 
-    mdls = {}
+    if not os.path.exists(path):
+        url = f"https://drive.google.com/uc?id={FILE_IDS[col]}"
+        gdown.download(url, path, quiet=False)
 
-    for t in targets:
-        path = os.path.join(model_dir, f"xgb_{t}.pkl")
-
-        # 🔥 ถ้ายังไม่มี → โหลด
-        if not os.path.exists(path):
-            url = f"https://drive.google.com/uc?id={FILE_IDS[t]}"
-            gdown.download(url, path, quiet=False)
-
-        # โหลด model
-        with open(path, "rb") as f:
-            mdls[t] = pickle.load(f)
-
-    return mdls
-
-MODELS = load_models()
-
+    with open(path, "rb") as f:
+        return pickle.load(f)
 # ─────────────────────────────────────────────
 # Session state
 # ─────────────────────────────────────────────
@@ -237,9 +222,12 @@ def compute_trait_means(answers: dict) -> dict:
 def predict_behaviors(answers: dict) -> dict:
     X = build_feature_vector(answers)
     preds = {}
-    for col, model in MODELS.items():
+
+    for col in ["AGR5","AGR9","CSN6","EST7","EXT4","OPN3","OPN10"]:
+        model = get_model(col)   # 🔥 โหลดทีละตัว
         val = float(model.predict(X)[0])
         preds[col] = float(np.clip(val, 1.0, 5.0))
+
     return preds
 
 def score_label(s: float) -> str:
