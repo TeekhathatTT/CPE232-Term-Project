@@ -20,63 +20,101 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-            body {
-    background-color: #0e1117;
-    color: #f0eeff;
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+
+html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
+body, .stApp { background-color: #0e1117; }
+#MainMenu, footer, header { visibility: hidden; }
+
+/* ── Responsive container ── */
+.block-container {
+    padding: 1.5rem 1rem 4rem !important;
+    max-width: 700px !important;
+    width: 100% !important;
+}
+@media (max-width: 480px) {
+    .block-container { padding: 1rem 0.75rem 3rem !important; }
 }
 
-.stApp {
-    background-color: #0e1117;
-}
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
-html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
-#MainMenu, footer, header { visibility: hidden; }
-.block-container { padding: 2rem 1.5rem 4rem; max-width: 700px; }
-.stProgress > div > div { background: #7F77DD; border-radius: 99px; }
-.stProgress > div { background: #ececec; border-radius: 99px; }
-div[data-testid="column"] button {
-    width:100%!important; border-radius:12px!important;
-    font-size:1.2rem!important; font-weight:500!important; height:56px!important;
-    border:1.5px solid #e0e0e0!important; background:white!important;
-    color:#333!important; transition:all 0.12s ease!important;
-}
-div[data-testid="column"] button:hover {
-    border-color:#7F77DD!important; color:#534AB7!important;
-    background:#f5f4ff!important; transform:translateY(-2px)!important;
-}
-.stButton > button[kind="primary"] {
-    background:#7F77DD!important; color:white!important; border:none!important;
-    border-radius:12px!important; font-weight:500!important;
-    font-size:15px!important; padding:0.65rem 1.5rem!important;
-}
-.stButton > button[kind="primary"]:hover { background:#534AB7!important; }
+/* ── Progress bar ── */
+.stProgress > div > div { background: #7F77DD !important; border-radius: 99px; }
+.stProgress > div { background: rgba(255,255,255,0.1) !important; border-radius: 99px; }
+
+/* ── Answer buttons (quiz) = secondary type restyled ── */
 .stButton > button[kind="secondary"] {
-    color:#555!important; border-color:#ddd!important;
-    background:#fafafa!important; border-radius:12px!important;
+    width: 100% !important;
+    border-radius: 14px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    min-height: 52px !important;
+    padding: 12px 20px !important;
+    border: 1.5px solid rgba(255,255,255,0.15) !important;
+    background: rgba(255,255,255,0.06) !important;
+    color: #e8e4ff !important;
+    text-align: left !important;
+    transition: all 0.12s ease !important;
+    margin-bottom: 2px !important;
 }
+.stButton > button[kind="secondary"]:hover {
+    border-color: #7F77DD !important;
+    background: rgba(127,119,221,0.22) !important;
+    color: #fff !important;
+}
+.stButton > button[kind="secondary"]:active { transform: scale(0.98) !important; }
+
+/* ── Primary button ── */
+.stButton > button[kind="primary"] {
+    background: #7F77DD !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 14px !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    padding: 0.7rem 1.5rem !important;
+    width: 100% !important;
+}
+.stButton > button[kind="primary"]:hover { background: #534AB7 !important; }
+
+/* ── Secondary (back) button ── */
+.stButton > button[kind="secondary"] {
+    color: #bbb !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    background: transparent !important;
+    border-radius: 12px !important;
+}
+
+/* ── Viewport meta via JS (Streamlit doesn't set it) ── */
 </style>
+<script>
+// Ensure mobile viewport scales correctly
+(function(){
+    var m = document.querySelector('meta[name=viewport]');
+    if(!m){ m = document.createElement('meta'); m.name='viewport'; document.head.appendChild(m); }
+    m.content = 'width=device-width, initial-scale=1, maximum-scale=1';
+})();
+</script>
 """, unsafe_allow_html=True)
 
-# ── inline-style helpers ──────────────────────────────────────────
+# ── inline-style helpers (responsive-aware) ──────────────────────
 C = {
-    "title":   "font-family:'DM Serif Display',serif;font-size:2.6rem;line-height:1.2;color:#eceaff;margin-bottom:.5rem",
-    "subtext": "font-size:15px;color:#ccc;line-height:1.7",
-    "infobox": "background:#f8f7ff;border-left:3px solid #7F77DD;border-radius:8px;padding:14px 16px;font-size:13px;color:#333;line-height:1.7;margin:1.5rem 0",
-    "divider": "height:1px;background:rgba(255,255,255,0.12);margin:2rem 0",
-    "sechead": "font-family:'DM Serif Display',serif;font-size:1.3rem;color:#eceaff;margin-bottom:1rem",
-    "q_num":   "font-size:13px;color:#aaa;margin-bottom:2px",
-    "q_text":  "font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1.5;color:#f0eeff;margin:.5rem 0 1.8rem",
-    "scale":   "display:flex;justify-content:space-between;font-size:12px;color:#bbb;margin-bottom:12px;padding:0 4px",
-    "progcap": "display:flex;justify-content:space-between;font-size:13px;color:#aaa;margin:-8px 0 20px;padding:0 4px",
+    "title":   "font-family:'DM Serif Display',serif;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.2;color:#eceaff;margin-bottom:.5rem",
+    "subtext": "font-size:clamp(13px,3.5vw,15px);color:#ccc;line-height:1.7",
+    "infobox": "background:rgba(127,119,221,0.13);border-left:3px solid #7F77DD;border-radius:10px;padding:14px 16px;font-size:clamp(12px,3vw,13.5px);color:#ddd;line-height:1.75;margin:1.5rem 0",
+    "divider": "height:1px;background:rgba(255,255,255,0.1);margin:1.75rem 0",
+    "sechead": "font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,4.5vw,1.3rem);color:#eceaff;margin-bottom:1rem",
+    "q_text":  "font-family:'DM Serif Display',serif;font-size:clamp(1.2rem,5vw,1.45rem);line-height:1.55;color:#f0eeff;margin:.5rem 0 1.6rem",
+    "scale":   "display:flex;justify-content:space-between;font-size:clamp(10px,2.8vw,12px);color:#bbb;margin-bottom:10px;padding:0 2px",
+    "progcap": "display:flex;justify-content:space-between;font-size:clamp(11px,3vw,13px);color:#aaa;margin:-6px 0 18px;padding:0 2px",
     "pill_row":"display:flex;flex-wrap:wrap;gap:8px;margin:1rem 0 .5rem",
 }
 
 BADGE = {
-    "EXT": "background:#EEEDFE;color:#3C3489;border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600",
-    "EST": "background:#FAECE7;color:#7A2810;border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600",
-    "AGR": "background:#E1F5EE;color:#085041;border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600",
-    "CSN": "background:#E6F1FB;color:#0C447C;border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600",
-    "OPN": "background:#FAEEDA;color:#633806;border-radius:99px;padding:3px 12px;font-size:11px;font-weight:600",
+    "EXT": "background:#EEEDFE;color:#3C3489;border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap",
+    "EST": "background:#FAECE7;color:#7A2810;border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap",
+    "AGR": "background:#E1F5EE;color:#085041;border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap",
+    "CSN": "background:#E6F1FB;color:#0C447C;border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap",
+    "OPN": "background:#FAEEDA;color:#633806;border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap",
 }
 
 # ─────────────────────────────────────────────
@@ -176,22 +214,19 @@ BEHAVIORS = [
 @st.cache_resource
 def get_model(col):
     FILE_IDS = {
-        "AGR5": "12PMvfPLH_yknObS_HQtBlYKDm5fAy6MH",
-        "AGR9": "157oXBN-bF6DVLodI4ARFavXXt1odNZED",
-        "CSN6": "116n0v9KM8LJXaC5twYjp_OvjNJHOd0c-",
-        "EST7": "1n57mJYEGB8Z60XhRIphL9rHT3vU6Y1BN",
-        "EXT4": "19Wsxb5DISjQw2aCRI60_dkragbg2uzw3",
-        "OPN3": "1RN53hZR86pXJ8VyRlHFqmIhkYfr0EZB7",
+        "AGR5":  "12PMvfPLH_yknObS_HQtBlYKDm5fAy6MH",
+        "AGR9":  "157oXBN-bF6DVLodI4ARFavXXt1odNZED",
+        "CSN6":  "116n0v9KM8LJXaC5twYjp_OvjNJHOd0c-",
+        "EST7":  "1n57mJYEGB8Z60XhRIphL9rHT3vU6Y1BN",
+        "EXT4":  "19Wsxb5DISjQw2aCRI60_dkragbg2uzw3",
+        "OPN3":  "1RN53hZR86pXJ8VyRlHFqmIhkYfr0EZB7",
         "OPN10": "1VdyM_u_8aXNhKtCGiYWxjEApvEI8sSMk",
     }
-
     os.makedirs("models", exist_ok=True)
     path = f"models/xgb_{col}.pkl"
-
     if not os.path.exists(path):
         url = f"https://drive.google.com/uc?id={FILE_IDS[col]}"
         gdown.download(url, path, quiet=False)
-
     with open(path, "rb") as f:
         return pickle.load(f)
 # ─────────────────────────────────────────────
@@ -232,7 +267,7 @@ def predict_behaviors(answers: dict) -> dict:
     preds = {}
 
     for col in ["AGR5","AGR9","CSN6","EST7","EXT4","OPN3","OPN10"]:
-        model = get_model(col)   # 🔥 โหลดทีละตัว
+        model = get_model(col)
         val = float(model.predict(X)[0])
         preds[col] = float(np.clip(val, 1.0, 5.0))
 
@@ -248,7 +283,7 @@ def score_label(s: float) -> str:
 def score_bar(score: float, color: str, h: int = 8) -> str:
     pct = (score - 1) / 4 * 100
     return (
-        f'<div class="score-bar-track">'
+        # f'<div class="score-bar-track">'
         f'<div class="score-bar-fill" style="width:{pct:.1f}%;background:{color};"></div>'
         f'</div>'
     )
@@ -317,19 +352,18 @@ elif st.session_state.page == "quiz":
 
     st.markdown(f'<div style="{C["q_text"]}">{q["text"]}</div>', unsafe_allow_html=True)
 
-    st.markdown(
-        f'<div style="{C["scale"]}">'
-        '<span>ไม่เห็นด้วยอย่างยิ่ง</span>'
-        '<span>กลางๆ</span>'
-        '<span>เห็นด้วยอย่างยิ่ง</span>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
+    CHOICE_LABELS = {
+        1: "ไม่เห็นด้วยอย่างยิ่ง",
+        2: "ไม่เห็นด้วย",
+        3: "กลางๆ",
+        4: "เห็นด้วย",
+        5: "เห็นด้วยอย่างยิ่ง",
+    }
 
-    btn_cols = st.columns(5)
-    for i, col in enumerate(btn_cols):
-        if col.button(str(i + 1), key=f"ans_{idx}_{i}", use_container_width=True):
-            st.session_state.answers[q["id"]] = i + 1
+    for i in range(1, 6):
+        label = f"{i} — {CHOICE_LABELS[i]}"
+        if st.button(label, key=f"ans_{idx}_{i}", use_container_width=True):
+            st.session_state.answers[q["id"]] = i
             if idx + 1 < total:
                 st.session_state.q_idx += 1
             else:
@@ -399,25 +433,27 @@ elif st.session_state.page == "result":
 
         st.markdown(
             f'<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);'
-            f'border-radius:16px;padding:18px 20px;margin-bottom:12px">'
-            f'  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">'
-            f'    <div style="flex:1">'
-            f'      <div style="font-weight:600;font-size:15px;color:#f0eeff;margin-bottom:4px">'
+            f'border-radius:16px;padding:16px 18px;margin-bottom:12px">'
+            # header row — wraps on mobile
+            f'  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">'
+            f'    <div style="flex:1;min-width:180px">'
+            f'      <div style="font-weight:700;font-size:clamp(13px,3.8vw,15px);color:#f0eeff;margin-bottom:4px">'
             f'        {b["label"]}'
-            f'        <span style="display:inline-block;{badge_s};margin-left:8px;vertical-align:middle;font-size:10px">'
+            f'        <span style="display:inline-block;{badge_s};margin-left:6px;vertical-align:middle;font-size:10px">'
             f'          {info["name"]}</span>'
             f'      </div>'
-            f'      <div style="font-size:13px;color:#aaa;margin-bottom:12px">{b["desc"]}</div>'
+            f'      <div style="font-size:clamp(11px,3vw,13px);color:#aaa">{b["desc"]}</div>'
             f'    </div>'
-            f'    <div style="font-family:DM Serif Display,serif;font-size:28px;color:{info["color"]};flex-shrink:0">'
-            f'      {score:.1f}</div>'
+            f'    <div style="font-family:\'DM Serif Display\',serif;font-size:clamp(22px,6vw,28px);'
+            f'color:{info["color"]};flex-shrink:0;line-height:1">{score:.1f}</div>'
             f'  </div>'
-            f'  <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:6px">'
+            # bar
+            f'  <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:5px">'
             f'    <span>{b["low"]}</span><span>{b["high"]}</span></div>'
             f'  <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden">'
             f'    <div style="width:{pct:.1f}%;height:100%;background:{info["color"]};border-radius:99px"></div>'
             f'  </div>'
-            f'  <div style="text-align:right;font-size:12px;color:{info["color"]};font-weight:700;margin-top:6px">'
+            f'  <div style="text-align:right;font-size:12px;color:{info["color"]};font-weight:700;margin-top:5px">'
             f'    {lbl}</div>'
             f'</div>',
             unsafe_allow_html=True,
