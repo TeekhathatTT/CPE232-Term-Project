@@ -214,13 +214,13 @@ BEHAVIORS = [
 @st.cache_resource
 def get_model(col):
     FILE_IDS = {
-        "AGR5":  "12PMvfPLH_yknObS_HQtBlYKDm5fAy6MH",
-        "AGR9":  "157oXBN-bF6DVLodI4ARFavXXt1odNZED",
-        "CSN6":  "116n0v9KM8LJXaC5twYjp_OvjNJHOd0c-",
-        "EST7":  "1n57mJYEGB8Z60XhRIphL9rHT3vU6Y1BN",
-        "EXT4":  "19Wsxb5DISjQw2aCRI60_dkragbg2uzw3",
-        "OPN3":  "1RN53hZR86pXJ8VyRlHFqmIhkYfr0EZB7",
-        "OPN10": "1VdyM_u_8aXNhKtCGiYWxjEApvEI8sSMk",
+        "AGR5":  "12iOoCXDZzwuvD-2vMcUSwm8cz2kBm3Vy",
+        "AGR9":  "1Ol_VMED7XtvTMk8I2ZNWyxf6M17Yg0JQ",
+        "CSN6":  "15YS5bwqKl04rN2hXSI0WBseS_pHCQELm",
+        "EST7":  "1HNIk30mKQKqdaE4TH70z-OKXBb-4YEhI",
+        "EXT4":  "1WHyibAOu54woclWFlCkd8TzDPC0LupJl",
+        "OPN3":  "1goydUW0N_1ahQ5oGjMyBi3_txECH7Beq",
+        "OPN10": "1pf2CcAaFXelKxE-SDBJwA2LTpwdVYxjU",
     }
     os.makedirs("models", exist_ok=True)
     path = f"models/xgb_{col}.pkl"
