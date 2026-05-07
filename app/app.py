@@ -264,6 +264,16 @@ def compute_trait_means(answers: dict) -> dict:
 
 def predict_behaviors(answers: dict) -> dict:
     X = build_feature_vector(answers)
+
+    # The models were trained with 5 trait-mean columns appended.
+    # Compute them and add to X before predicting.
+    traits = compute_trait_means(answers)
+    X["EXT_score"] = traits["EXT"]
+    X["EST_score"] = traits["EST"]
+    X["AGR_score"] = traits["AGR"]
+    X["CSN_score"] = traits["CSN"]
+    X["OPN_score"] = traits["OPN"]
+
     preds = {}
 
     for col in ["AGR5","AGR9","CSN6","EST7","EXT4","OPN3","OPN10"]:
